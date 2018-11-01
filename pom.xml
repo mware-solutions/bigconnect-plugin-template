@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>com.mware</groupId>
+        <artifactId>bc</artifactId>
+        <version>3.5.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.bigconnect</groupId>
+    <artifactId>basic</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Example BigConnect Plugins</name>
+
+    <properties>
+        <bigconnect.version>3.5.0</bigconnect.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.bigconnect</groupId>
+                <artifactId>basic-auth</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bigconnect</groupId>
+                <artifactId>basic-cli</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bigconnect</groupId>
+                <artifactId>basic-core</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bigconnect</groupId>
+                <artifactId>basic-web</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bigconnect</groupId>
+                <artifactId>basic-worker</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mware</groupId>
+                <artifactId>bc-common</artifactId>
+                <version>${bigconnect.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mware</groupId>
+                <artifactId>bc-test</artifactId>
+                <version>${bigconnect.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mware</groupId>
+                <artifactId>bc-web-base</artifactId>
+                <version>${bigconnect.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mware</groupId>
+                <artifactId>bc-tomcat-server</artifactId>
+                <version>${bigconnect.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!--
+                The antrun plugin is here to perform tasks that need to be done once after this project is generated,
+                because of limitations of the Maven archetype project generator. This plugin can be removed after
+                'mvn package' has been run once.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>one-time-tasks</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <chmod file="${project.basedir}/*.sh" perm="755"/>
+                                <move file="${project.basedir}/gitignore" tofile="${project.basedir}/.gitignore" failonerror="false"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+  <modules>
+    <module>plugins/auth</module>
+    <module>deploy</module>
+    <module>plugins/web</module>
+    <module>plugins/worker</module>
+    <module>plugins/core</module>
+    <module>plugins/cli</module>
+  </modules>
+</project>
